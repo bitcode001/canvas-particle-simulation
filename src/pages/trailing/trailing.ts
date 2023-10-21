@@ -1,6 +1,3 @@
-import "./style.css";
-import "./canvas-style.css";
-
 const myCanvas: HTMLCanvasElement = document.getElementById('my-canvas') as HTMLCanvasElement;
 const ctx = myCanvas.getContext('2d')!;
 myCanvas.width = window.innerWidth;
