@@ -2,19 +2,24 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite'
 
+const root = resolve(__dirname, 'src');
+const outDir = resolve(__dirname, 'dist');
 export default defineConfig({
   // ...
   // base: '',
   // root: 'src',
+  root,
   build: {
     minify: true,
+    outDir,
+    emptyOutDir: true,
     rollupOptions: {
         input: {
-            main: resolve(__dirname, 'index.html'),
-            trailing: resolve(__dirname, 'src/pages/trailing/index.html'),
-            fireworks: resolve(__dirname, 'src/pages/fireworks/index.html'),
-            shooter: resolve(__dirname, 'src/pages/shooter/index.html'),
-            physics: resolve(__dirname, 'src/pages/physics/index.html'),
+            main: resolve(root, 'index.html'),
+            trailing: resolve(root, 'pages', 'trailing', 'index.html'),
+            fireworks: resolve(root, 'pages', 'fireworks', 'index.html'),
+            shooter: resolve(root, 'pages', 'shooter', 'index.html'),
+            physics: resolve(root, 'pages', 'physics', 'index.html'),
         },
     }
   },
