@@ -4,6 +4,12 @@ const fireworkCtx = fireworkCanvas.getContext("2d")!;
 fireworkCanvas.width = window.innerWidth;
 fireworkCanvas.height = window.innerHeight;
 
+// On every window resize - reset the drawing
+window.addEventListener('resize', () => {
+  myCanvas.width = window.innerWidth;
+  myCanvas.height = window.innerHeight;
+});
+
 const myFireworks: Firework[] = [];
 let myFireworkHue = 0;
 class Firework {
