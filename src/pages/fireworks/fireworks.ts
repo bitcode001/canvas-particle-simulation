@@ -6,8 +6,8 @@ fireworkCanvas.height = window.innerHeight;
 
 // On every window resize - reset the drawing
 window.addEventListener('resize', () => {
-  myCanvas.width = window.innerWidth;
-  myCanvas.height = window.innerHeight;
+  fireworkCanvas.width = window.innerWidth;
+  fireworkCanvas.height = window.innerHeight;
 });
 
 const myFireworks: Firework[] = [];
@@ -25,7 +25,7 @@ class Firework {
         this.posX = Math.random() * (fireworkCanvas.width - 100) + 50;
         this.posY = fireworkCanvas.height;
         this.size = Math.random() * 2 + 5;
-        this.velocityY = Math.random() * 6 + 4;
+        this.velocityY = Math.random() * 4 + 4;
         // this.hslColor = `hsl(${myFireworkHue}, 100%, 50%)`;
         this.hslColor = `white`;
         this.destructCord = Math.random() * (30/100 * fireworkCanvas.height / 2) + (20/100 * fireworkCanvas.height / 2);
@@ -58,7 +58,7 @@ class Blast {
         this.posY = posY;
         this.size = Math.random() * 6 + 4;
         this.velocityX = Math.random() * (2 - (-2)) + (-2);
-        this.velocityY = Math.random() * 2.5 - 1.5;
+        this.velocityY = Math.random() * 4 - 2;
         this.hslColor = `hsl(${myFireworkHue}, 100%, 50%)`;
     }
 
@@ -77,10 +77,62 @@ class Blast {
     }
 }
 
-fireworkCanvas.addEventListener('click', (_) => {
-    myFireworks.push(new Firework());
-    // console.log('myFireworks: ', myFireworks);
+// fireworkCanvas.addEventListener('click', (_) => {
+//     myFireworks.push(new Firework());
+//     // console.log('myFireworks: ', myFireworks);
+// });
+
+// Setting up menu design and function
+const parentController = document.getElementById('launch-controller');
+let fireInterval: NodeJS.Timeout[] = [];
+parentController?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    // console.log('target: ', event.target);
+    // console.log('current target: ', event.currentTarget);
+    const functionType = (event.target as HTMLButtonElement).getAttribute('data-function');
+    // console.log('functionType: ', functionType);
+    if(functionType === 'handleFireworkLaunch') {
+        myFireworks.push(new Firework());
+    }
+    if(functionType === 'handleIntervalLaunch') {
+        if(fireInterval.length === 0) {
+            fireInterval.push(
+                setInterval(() => {
+                    myFireworks.push(new Firework());
+                }, 200)
+            );
+        }
+    }
+    if(functionType === 'handleStopIntervalLaunch'){
+        if(fireInterval.length) {
+            clearInterval(fireInterval[0]);
+            fireInterval.pop();
+        }
+    }
 });
+
+// Setting up menu controller
+const menuController = document.getElementById('launch-menu');
+menuController?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const functionType = (e.target as HTMLButtonElement).getAttribute('data-function');
+    if(functionType === 'close-menu') {
+        (e.target as HTMLButtonElement).classList.toggle('active');
+        // Change menu controller
+        document.querySelector("[data-function='open-menu']")?.classList.toggle('active');
+        // Update menu visibility 
+        parentController?.classList.toggle('controller-visible');
+    }
+    if(functionType === 'open-menu') {
+        (e.target as HTMLButtonElement).classList.toggle('active');
+        // Change menu controller
+        document.querySelector("[data-function='close-menu']")?.classList.toggle('active');
+        // Update menu visibility 
+        parentController?.classList.toggle('controller-visible');
+    }
+})
 
 function handleFireworkAnimation() {
     if(myFireworks.length > 0) {
@@ -118,8 +170,7 @@ function animateFirework() {
     requestAnimationFrame(animateFirework);
     handleFireworkAnimation();
     handleBlastAnimation();
-    myFireworkHue+=2;
-    // console.log('Animating', myFireworks);
+    myFireworkHue+=3;
 }
 
 animateFirework();
